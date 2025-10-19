@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Carrusel de Imágenes</title>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -21,8 +20,8 @@
     }
 
     #carrusel img {
-      width: 100%;
-      height: auto;
+      width: auto;
+      height: 100%;
       object-fit: cover;
       transition: opacity 1s ease-in-out;
       position: absolute;
@@ -47,45 +46,44 @@
     var folder = "imagenes/";
     var imagenes = [];
 
-    $.ajax({
-        url : folder,
-        success: function (data) {
-            $(data).find("a").attr("href", function (i, val) {
-                if( val.match(/\.(jpe?g|png|gif)$/) ) { 
-                    //$("body").append( "<img src='"+ folder + val +"'>" );
-                    imagenes.push(folder + val);
-                } 
-            });
+    (async () => {
+        const response = await fetch('https://api.github.com/repos/tropiplaya/carrusel/contents/imagenes?ref=main');
+        const data = await response.json();
+        
+        for (let file of data) {
+          let image = file.path;
+          console.log(image);
+          imagenes.push(image);
         }
-    });
 
-    const carrusel = document.getElementById('carrusel');
-    let indice = 0;
+        const carrusel = document.getElementById('carrusel');
+        let indice = 0;
 
-    // Crear elemento de imagen
-    const img = document.createElement('img');
-    img.src = imagenes[indice];
-    carrusel.appendChild(img);
+        // Crear elemento de imagen
+        const img = document.createElement('img');
+        img.src = imagenes[indice];
+        carrusel.appendChild(img);
 
-    setInterval(() => {
-      indice = (indice + 1) % imagenes.length;
-      const nuevaImg = document.createElement('img');
-      nuevaImg.src = imagenes[indice];
-      nuevaImg.style.opacity = 0;
-      carrusel.appendChild(nuevaImg);
+        setInterval(() => {
+          indice = (indice + 1) % imagenes.length;
+          const nuevaImg = document.createElement('img');
+          nuevaImg.src = imagenes[indice];
+          nuevaImg.style.opacity = 0;
+          carrusel.appendChild(nuevaImg);
 
-      // Transición de fundido
-      setTimeout(() => {
-        nuevaImg.style.opacity = 1;
-        img.style.opacity = 0;
-        setTimeout(() => {
-          carrusel.removeChild(img);
-          img.src = nuevaImg.src;
-          carrusel.removeChild(nuevaImg);
-          carrusel.appendChild(img);
-        }, 1000);
-      }, 50);
-    }, 5000);
+          // Transición de fundido
+          setTimeout(() => {
+            nuevaImg.style.opacity = 1;
+            img.style.opacity = 0;
+            setTimeout(() => {
+              carrusel.removeChild(img);
+              img.src = nuevaImg.src;
+              carrusel.removeChild(nuevaImg);
+              carrusel.appendChild(img);
+            }, 1000);
+          }, 50);
+        }, 5000);
+      })()    
   </script>
 </body>
 </html>
