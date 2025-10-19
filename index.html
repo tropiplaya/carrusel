@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Carrusel de Imágenes</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -43,12 +44,20 @@
 
   <script>
     // Aquí defines las imágenes que están en la carpeta ./imagenes
-    const imagenes = [
-      'imagenes/foto1.jpg',
-      'imagenes/foto2.jpg',
-      'imagenes/foto3.jpg',
-      // agrega más imágenes si deseas
-    ];
+    var folder = "imagenes/";
+    var imagenes = [];
+
+    $.ajax({
+        url : folder,
+        success: function (data) {
+            $(data).find("a").attr("href", function (i, val) {
+                if( val.match(/\.(jpe?g|png|gif)$/) ) { 
+                    //$("body").append( "<img src='"+ folder + val +"'>" );
+                    imagenes.push(folder + val);
+                } 
+            });
+        }
+    });
 
     const carrusel = document.getElementById('carrusel');
     let indice = 0;
