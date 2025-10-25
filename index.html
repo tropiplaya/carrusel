@@ -38,8 +38,29 @@
 </head>
 <body>
   <div id="contenedor">
-    <div id="carrusel"></div>
+    <button id="fullScreenBtn" onclick="launchIntoFullscreen(document.documentElement);">
+      Pantalla completa e iniciar
+    </button>
+    <div id="carrusel" style="display: none;"></div>
   </div>
+
+  <script>
+    // Find the right method, call on correct element
+    function launchIntoFullscreen(element) {
+      document.getElementById("fullScreenBtn").style.display = "none";
+      document.getElementById("carrusel").style.display = "block";
+
+      if(element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if(element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+      } else if(element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+      } else if(element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+      }
+    }
+  </script>
 
   <script>
     // Aquí defines las imágenes que están en la carpeta ./imagenes
